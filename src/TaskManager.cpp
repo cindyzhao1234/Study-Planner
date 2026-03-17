@@ -25,6 +25,7 @@ void TaskManager::DrawTaskPanel(){
     DrawRectangleLines((float)panelX, (float)panelY, (float)panelWidth, (float)heightNeeded, BLACK);
 
     Rectangle header = {(float)panelX, (float)panelY, (float)panelWidth, (float)headerHeight};
+    DrawText("To Do List:", panelX + 20, panelY + 20, 20, BLACK);
     DrawRectangleLines((float)panelX, (float)panelY, (float)panelWidth, (float)headerHeight, MAROON);
 
     taskAreaX = panelX + padding;
