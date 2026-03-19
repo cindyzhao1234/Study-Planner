@@ -1,19 +1,24 @@
 #pragma once
 #include "Accessories.h"
+#include "CharacterRender.h"
+#include "User.h"
 #include <vector>
 #include <raylib.h>
 
-class Inventory{
-    public:
-        void DrawButton(); //draw a rectangle button
-        void UpdateButton(); //make the button clickable
-        void DrawPopup(); //big rectangle center of screen
-        void UpdatePopup(); //loop over every items rectangle, if clicked, equipped = true
+class Inventory {
+public:
+    void DrawButton();
+    void UpdateButton();
 
-    private:
-        bool isOpen;
-        Rectangle inventoryButton;
-        Rectangle popupBox;
-        
-        std::vector<Accessories> accessories;
+    void DrawPopup(const User& user, const Assets& assets, CharacterRenderer& characterRenderer);   
+    void UpdatePopup(User& user);
+
+    void AddAccessory(const Accessories& accessory);
+
+private:
+    bool isOpen = false;
+    Rectangle inventoryButton;
+    Rectangle popupBox;
+
+    std::vector<Accessories> accessoriesList;
 };

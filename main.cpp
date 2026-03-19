@@ -9,6 +9,13 @@
 int main(){
     TaskManager taskManager;
     Inventory inventory;
+    User user;
+    CharacterRenderer characterRenderer;
+
+    inventory.AddAccessory({"Blue Hat", "hat"});
+    inventory.AddAccessory({"Blue Dress", "top"});
+    inventory.AddAccessory({"Black Pants", "bottom"});
+
     Assets assets;
     taskManager.AddTask({"Study for quiz and clean room and watch lec", false});
     taskManager.AddTask({"Study for quiz1", false});
@@ -43,17 +50,24 @@ int main(){
 
 
         ClearBackground(RAYWHITE);
+        Rectangle dest = {
+            (float)screenWidth / 2 - 224,
+            (float)screenHeight / 2 - 224,
+            assets.characterTexture.width * 7.0f,
+            assets.characterTexture.height * 7.0f
+        };
+        
+        characterRenderer.DrawCharacter(user, assets, dest);
 
-        inventory.DrawButton();
-        inventory.UpdateButton();
-        inventory.DrawPopup();
         taskManager.DrawTaskPanel();
         taskManager.DrawTasks();
         DrawTextureEx(assets.coinTexture, Vector2{1000, 20}, 0.0f, 1.0f, WHITE);
         DrawText(TextFormat("%d", taskManager.GetCoinCount()), 1040, 27, 20, BLACK);
 
-        DrawTextureEx(assets.characterTexture, Vector2{(float)screenWidth / 2 - 224, (float)screenHeight / 2 - 224}, 0.0f, 7.0f, WHITE);
-
+        inventory.DrawButton();
+        inventory.UpdateButton();
+        inventory.UpdatePopup(user);
+        inventory.DrawPopup(user, assets, characterRenderer);
 
         EndDrawing();
     }

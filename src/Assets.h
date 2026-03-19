@@ -4,6 +4,7 @@
 struct Assets {
     Texture2D coinTexture;
     Texture2D characterTexture;
+    Texture2D blueDress;
 
     void Load();
     void Unload();

@@ -1,5 +1,10 @@
 #pragma once
+#include <string>
 
-struct User{
+struct User {
     int CoinCount = 0;
+
+    std::string equippedHat = "";
+    std::string equippedTop = "";
+    std::string equippedBottom = "";
 };

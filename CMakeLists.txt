@@ -11,6 +11,7 @@ add_executable(StudyPlanner
     src/TaskManager.cpp
     src/Assets.cpp
     src/Inventory.cpp
+    src/CharacterRender.cpp
 )
 
 target_link_libraries(StudyPlanner PRIVATE raylib)

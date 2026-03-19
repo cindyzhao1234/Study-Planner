@@ -1,27 +1,178 @@
 #include "Inventory.h"
+#include <algorithm>
 
-void Inventory::DrawButton(){
+void Inventory::DrawButton() {
     inventoryButton = {1100.0f, 100.0f, 50.0f, 50.0f};
-    DrawRectangleLines(1100.0f, 100.0f, 50.0f, 50.0f, BLACK);
-} //draw a rectangle button
+    DrawRectangleLines((int)inventoryButton.x, (int)inventoryButton.y,
+                       (int)inventoryButton.width, (int)inventoryButton.height, BLACK);
+}
 
-void Inventory::UpdateButton(){
-
-    if(CheckCollisionPointRec(GetMousePosition(), inventoryButton) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-        isOpen = true;
+void Inventory::UpdateButton() {
+    if (CheckCollisionPointRec(GetMousePosition(), inventoryButton) &&
+        IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+        isOpen = !isOpen;
+        return;
     }
-    if(!CheckCollisionPointRec(GetMousePosition(), inventoryButton) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+
+    if (!CheckCollisionPointRec(GetMousePosition(), inventoryButton) &&
+        IsMouseButtonPressed(MOUSE_BUTTON_LEFT) &&
+        !CheckCollisionPointRec(GetMousePosition(), popupBox)) {
         isOpen = false;
     }
-} //make the button clickable
+}
 
-void Inventory::DrawPopup(){
-    if(isOpen == true){
-        popupBox = {200.0f, 100.0f, 880.0f, 520.0f};
-        DrawRectangle(200.0f, 100.0f, 880.0f, 520.0f, BLUE);
+void Inventory::DrawPopup(const User& user, const Assets& assets, CharacterRenderer& characterRenderer) {
+    if (!isOpen) {
+        return;
     }
-} //big rectangle center of screen
 
-void Inventory::UpdatePopup(){
+    popupBox = {200.0f, 100.0f, 880.0f, 520.0f};
+    DrawRectangle((int)popupBox.x, (int)popupBox.y,
+                  (int)popupBox.width, (int)popupBox.height, BLUE);
 
-} //loop over every items rectangle, if clicked, equipped = true
+    float innerPadding = 20.0f;
+    float slotSize = 60.0f;
+    float slotSpacing = 15.0f;
+    int columns = 3;
+
+    Rectangle accessoriesPanel = {
+        popupBox.x + innerPadding,
+        popupBox.y + 60,
+        popupBox.width * 0.55f - innerPadding,
+        popupBox.height - 80
+    };
+
+    Rectangle previewPanel = {
+        popupBox.x + popupBox.width * 0.60f,
+        popupBox.y + 60,
+        popupBox.width * 0.35f,
+        popupBox.height - 80
+    };
+
+    DrawText("CLOSET", (int)popupBox.x + 20, (int)popupBox.y + 20, 20, BLACK);
+
+    DrawRectangleLines((int)accessoriesPanel.x, (int)accessoriesPanel.y,
+                       (int)accessoriesPanel.width, (int)accessoriesPanel.height, GREEN);
+
+    DrawRectangleLines((int)previewPanel.x, (int)previewPanel.y,
+                       (int)previewPanel.width, (int)previewPanel.height, RED);
+
+    DrawText("Accessories", (int)accessoriesPanel.x + 10, (int)accessoriesPanel.y + 10, 20, BLACK);
+    DrawText("Preview", (int)previewPanel.x + 10, (int)previewPanel.y + 10, 20, BLACK);
+
+    // Draw base character in preview panel
+    float maxWidth = previewPanel.width - 40;
+    float maxHeight = previewPanel.height - 40;
+
+    float scaleX = maxWidth / (float)assets.characterTexture.width;
+    float scaleY = maxHeight / (float)assets.characterTexture.height;
+    float scale = std::min(scaleX, scaleY);
+
+    float drawWidth = assets.characterTexture.width * scale;
+    float drawHeight = assets.characterTexture.height * scale;
+
+    Rectangle dest = {
+        previewPanel.x + (previewPanel.width - drawWidth) / 2,
+        previewPanel.y + (previewPanel.height - drawHeight) / 2,
+        drawWidth,
+        drawHeight
+    };
+
+    characterRenderer.DrawCharacter(user, assets, dest);
+
+    // Draw accessory slots
+    for (int i = 0; i < (int)accessoriesList.size(); i++) {
+        int row = i / columns;
+        int col = i % columns;
+
+        float slotX = accessoriesPanel.x + 20 + col * (slotSize + slotSpacing);
+        float slotY = accessoriesPanel.y + 40 + row * (slotSize + slotSpacing);
+
+        Rectangle itemSlot = {slotX, slotY, slotSize, slotSize};
+
+        Color slotColour = RED;
+        if (accessoriesList[i].equipped) {
+            slotColour = GREEN;
+        }
+
+        DrawRectangle((int)itemSlot.x, (int)itemSlot.y,
+                      (int)itemSlot.width, (int)itemSlot.height, slotColour);
+
+        // Optional: show first letter of item name
+        DrawText(accessoriesList[i].name.c_str(),
+                 (int)itemSlot.x + 5,
+                 (int)itemSlot.y + 20,
+                 10,
+                 BLACK);
+    }
+}
+
+void Inventory::UpdatePopup(User& user) {
+    if (!isOpen) {
+        return;
+    }
+
+    float innerPadding = 20.0f;
+    float slotSize = 60.0f;
+    float slotSpacing = 15.0f;
+    int columns = 3;
+
+    Rectangle accessoriesPanel = {
+        popupBox.x + innerPadding,
+        popupBox.y + 60,
+        popupBox.width * 0.55f - innerPadding,
+        popupBox.height - 80
+    };
+
+    for (int i = 0; i < (int)accessoriesList.size(); i++) {
+        int row = i / columns;
+        int col = i % columns;
+
+        float slotX = accessoriesPanel.x + 20 + col * (slotSize + slotSpacing);
+        float slotY = accessoriesPanel.y + 40 + row * (slotSize + slotSpacing);
+
+        Rectangle itemSlot = {slotX, slotY, slotSize, slotSize};
+
+        if (CheckCollisionPointRec(GetMousePosition(), itemSlot) &&
+            IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+
+            std::string clickedCategory = accessoriesList[i].category;
+            bool wasEquipped = accessoriesList[i].equipped;
+
+            // Unequip all items in the same category first
+            for (int j = 0; j < (int)accessoriesList.size(); j++) {
+                if (accessoriesList[j].category == clickedCategory) {
+                    accessoriesList[j].equipped = false;
+                }
+            }
+
+            // If it was already equipped, leave it unequipped
+            if (wasEquipped) {
+                if (clickedCategory == "hat") {
+                    user.equippedHat = "";
+                } else if (clickedCategory == "top") {
+                    user.equippedTop = "";
+                } else if (clickedCategory == "bottom") {
+                    user.equippedBottom = "";
+                }
+            } else {
+                // Otherwise equip the clicked one
+                accessoriesList[i].equipped = true;
+
+                if (clickedCategory == "hat") {
+                    user.equippedHat = accessoriesList[i].name;
+                } else if (clickedCategory == "top") {
+                    user.equippedTop = accessoriesList[i].name;
+                } else if (clickedCategory == "bottom") {
+                    user.equippedBottom = accessoriesList[i].name;
+                }
+            }
+
+            return;
+        }
+    }
+}
+
+void Inventory::AddAccessory(const Accessories& accessory) {
+    accessoriesList.push_back(accessory);
+}
