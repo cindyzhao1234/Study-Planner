@@ -3,9 +3,10 @@
 #include <raylib.h>
 
 struct Task{
-    const std::string taskDescription;
+    std::string taskDescription;
     bool completed = false;
     Color color = BLACK;
-    int fontSize = 20;
+    int fontSize = 16;
     int taskHeight = 60;
+    Rectangle deleteTask;
 };

@@ -28,7 +28,11 @@ int main(){
    
     while(!WindowShouldClose()){
 
-        
+        taskManager.UpdateScroll();
+        taskManager.UpdateTaskToggle();
+        taskManager.UpdateAddButton();
+        taskManager.UpdateTaskInput();
+        taskManager.DeleteTask();
 
         BeginDrawing();
 
@@ -37,9 +41,6 @@ int main(){
 
         taskManager.DrawTaskPanel();
         taskManager.DrawTasks();
-
-        taskManager.UpdateScroll();
-        taskManager.UpdateTaskToggle();
 
 
         EndDrawing();

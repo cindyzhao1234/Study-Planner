@@ -1,42 +1,48 @@
 #pragma once
 #include "Task.h"
+#include "raylib.h"
 #include <vector>
 #include <string>
 
-class TaskManager{
-    public:
-        void InitTaskPanel(); //create the task manager window
-        void DrawTaskPanel();
-        void DrawTasks();
-        void DrawTaskText();
+class TaskManager {
+public:
+    void InitTaskPanel();
+    void DrawTaskPanel();
+    void DrawTasks();
 
-        std::vector<std::string> WrapText(const std::string& text, int maxWidth, int fontSize);
+    std::vector<std::string> WrapText(const std::string& text, int maxWidth, int fontSize);
 
-        void AddTask(const Task& task);
-        // void addTask(std::string taskDescription); //create the task
-        // void toggleComplete(Task& task); //ticks the checkbox
-        // void drawCheckbox(Task& task);
-        // void draw();
-        float HeightNeeded();
-        float TotalTaskHeight();
+    void AddTask(const Task& task);
+    void UpdateAddButton();
+    void UpdateTaskInput();
+    void UpdateScroll();
+    void UpdateTaskToggle();
+    void DeleteTask();
 
-        void UpdateScroll();
-        void UpdateTaskToggle();
+    float HeightNeeded();
+    float TotalTaskHeight();
 
-        std::vector<Task> getTaskList();
+private:
+    std::vector<Task> taskList;
 
-    private:
-        std::vector<Task> taskList;
+    float panelX, panelY;
+    float panelWidth, panelHeight;
+    float headerHeight;
 
-        float panelX, panelY;
-        float panelWidth, panelHeight;
-        float headerHeight;
-        float taskAreaWidth, taskAreaHeight;
-        float taskAreaX, taskAreaY;
-        float padding;
+    float taskAreaWidth, taskAreaHeight;
+    float taskAreaX, taskAreaY;
 
-        float checkboxWidth, checkboxHeight;
+    float padding;
+    float checkboxWidth, checkboxHeight;
 
-        bool scrollEnabled = false;
-        float scrollOffset;
+    bool scrollEnabled = false;
+    float scrollOffset = 0.0f;
+
+    Rectangle addButton;
+    bool isTypingTask = false;
+    std::string currentInput;
+
+    float GetTaskHeight(const Task& task);
+    Rectangle GetTaskCheckboxRect(float currentY);
+    Rectangle GetTaskDeleteRect(float currentY, int maxWidth);
 };
