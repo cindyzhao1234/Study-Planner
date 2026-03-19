@@ -3,6 +3,7 @@
 #include "raylib.h"
 #include <vector>
 #include <string>
+#include "User.h"
 
 class TaskManager {
 public:
@@ -21,6 +22,8 @@ public:
 
     float HeightNeeded();
     float TotalTaskHeight();
+
+    int GetCoinCount();
 
 private:
     std::vector<Task> taskList;
@@ -45,4 +48,6 @@ private:
     float GetTaskHeight(const Task& task);
     Rectangle GetTaskCheckboxRect(float currentY);
     Rectangle GetTaskDeleteRect(float currentY, int maxWidth);
+
+    User user;
 };

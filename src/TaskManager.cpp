@@ -42,7 +42,7 @@ Rectangle TaskManager::GetTaskDeleteRect(float currentY, int maxWidth){
 
 // ---------- Setup ----------
 
-void TaskManager::InitTaskPanel(){}
+void TaskManager::InitTaskPanel(){
     panelX = 40;
     panelY = 40;
     panelWidth = 300;
@@ -283,7 +283,8 @@ void TaskManager::UpdateTaskToggle(){
         Rectangle checkbox = GetTaskCheckboxRect(currentY);
 
         if(CheckCollisionPointRec(GetMousePosition(), checkbox) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-            taskList[i].completed = !taskList[i].completed;
+            taskList[i].completed = true;
+            user.CoinCount ++;
             std::cout << "Task checkbox clicked\n";
         }
 
@@ -337,9 +338,17 @@ std::vector<std::string> TaskManager::WrapText(const std::string& text, int maxW
 
 void TaskManager::DeleteTask(){
     for(int i = 0; i < (int)taskList.size(); i++){
+        if(taskList[i].completed == true){
+            taskList.erase(taskList.begin() + i);
+            break;
+        }
         if (CheckCollisionPointRec(GetMousePosition(), taskList[i].deleteTask) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
             taskList.erase(taskList.begin() + i);
             break; 
         }
     }
+}
+
+int TaskManager::GetCoinCount(){
+    return user.CoinCount;
 }

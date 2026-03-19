@@ -41,6 +41,7 @@ int main(){
 
         taskManager.DrawTaskPanel();
         taskManager.DrawTasks();
+        DrawText(TextFormat("Coins: %d", taskManager.GetCoinCount()), 1000, 20, 16, BLACK);
 
 
         EndDrawing();
