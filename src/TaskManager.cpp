@@ -40,6 +40,10 @@ Rectangle TaskManager::GetTaskDeleteRect(float currentY, int maxWidth){
     };
 }
 
+int TaskManager::GetCoinCount(){
+    return user.CoinCount;
+}
+
 // ---------- Setup ----------
 
 void TaskManager::InitTaskPanel(){
@@ -347,8 +351,4 @@ void TaskManager::DeleteTask(){
             break; 
         }
     }
-}
-
-int TaskManager::GetCoinCount(){
-    return user.CoinCount;
 }

@@ -9,6 +9,7 @@ find_package(raylib REQUIRED)
 add_executable(StudyPlanner
     main.cpp
     src/TaskManager.cpp
+    src/Assets.cpp
 )
 
 target_link_libraries(StudyPlanner PRIVATE raylib)

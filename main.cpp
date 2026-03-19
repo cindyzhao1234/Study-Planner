@@ -3,9 +3,11 @@
 #include <vector>
 #include "./src/TaskManager.h"
 #include <iostream>
+#include "./src/Assets.h"
 
 int main(){
     TaskManager taskManager;
+    Assets assets;
     taskManager.AddTask({"Study for quiz and clean room and watch lec", false});
     taskManager.AddTask({"Study for quiz1", false});
     taskManager.AddTask({"Study for quiz2", false});
@@ -21,6 +23,7 @@ int main(){
 
     SetTargetFPS(60);
 
+    assets.Load();
     taskManager.InitTaskPanel();
 
 
@@ -41,12 +44,15 @@ int main(){
 
         taskManager.DrawTaskPanel();
         taskManager.DrawTasks();
-        DrawText(TextFormat("Coins: %d", taskManager.GetCoinCount()), 1000, 20, 16, BLACK);
+        DrawTextureEx(assets.coinTexture, Vector2{1000, 20}, 0.0f, 1.0f, WHITE);
+        DrawText(TextFormat("%d", taskManager.GetCoinCount()), 1040, 27, 20, BLACK);
+
+        DrawTextureEx(assets.characterTexture, Vector2{(float)screenWidth / 2 - 224, (float)screenHeight / 2 - 224}, 0.0f, 7.0f, WHITE);
 
 
         EndDrawing();
     }
-
+    assets.Unload();
     CloseWindow();
     // =======================
 
