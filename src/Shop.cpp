@@ -1,4 +1,5 @@
 #include "Shop.h"
+#include <format>
 
 void Shop::DrawButton() {
     shopButton = {1100.0f, 200.0f, 50.0f, 50.0f};
@@ -74,11 +75,18 @@ void Shop::DrawPopup(std::vector<Accessories>& allItems) {
         popupBox.height - 130
     };
 
-    Rectangle previewPanel = {
+    previewPanel = {
         popupBox.x + popupBox.width * 0.62f,
         popupBox.y + 110,
         popupBox.width * 0.30f,
         popupBox.height - 130
+    };
+
+    buyButton = {
+        previewPanel.x + (previewPanel.width / 4),
+        previewPanel.y + 300,
+        previewPanel.width / 2,
+        50
     };
 
     DrawRectangleLines((int)itemsPanel.x, (int)itemsPanel.y, (int)itemsPanel.width, (int)itemsPanel.height, BLACK);
@@ -136,8 +144,11 @@ void Shop::DrawPopup(std::vector<Accessories>& allItems) {
 
         if (allItems[selectedItemIndex].owned) {
             DrawText("Owned", (int)previewPanel.x + 10, (int)previewPanel.y + 90, 18, DARKGRAY);
+            
         } else {
             DrawText("Available", (int)previewPanel.x + 10, (int)previewPanel.y + 90, 18, BLACK);
+            DrawRectangleLines((int)buyButton.x, (int)buyButton.y, (int)buyButton.width, (int)buyButton.height, BLUE);
+            DrawText(TextFormat("Buy: %d coins", allItems[selectedItemIndex].price), buyButton.x + 10, buyButton.y + 10, 16, BLACK);
         }
     }
 }
@@ -202,10 +213,13 @@ void Shop::UpdatePopup(std::vector<Accessories>& allItems) {
 
         Rectangle itemSlot = {slotX, slotY, slotSize, slotSize};
 
-        if (CheckCollisionPointRec(GetMousePosition(), itemSlot) &&
-            IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+        if (CheckCollisionPointRec(GetMousePosition(), itemSlot) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
             selectedItemIndex = i;
             return;
+        }
+
+        if(CheckCollisionPointRec(GetMousePosition(), buyButton) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+            allItems[selectedItemIndex].owned = true;
         }
 
         visibleIndex++;

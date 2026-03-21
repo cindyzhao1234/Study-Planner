@@ -20,10 +20,12 @@ private:
 
     std::string selectedCategory = "all";
     int selectedItemIndex = -1;
+    Rectangle previewPanel;
 
     Rectangle allFilter, hatFilter, hairFilter, topFilter, bottomFilter;
     Rectangle popupBox;
     Rectangle shopButton;
+    Rectangle buyButton;
     bool isOpen = false;
 
     std::vector<Accessories> shopItems;
