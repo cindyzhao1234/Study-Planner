@@ -31,7 +31,5 @@ private:
     std::string popupMessage;
     float popupMessageTimer;
 
-    bool enoughCoins = false;
-
     std::vector<Accessories> shopItems;
 };

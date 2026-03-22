@@ -145,13 +145,16 @@ void Shop::DrawPopup(std::vector<Accessories>& allItems) {
                  BLACK);
 
         if (allItems[selectedItemIndex].owned) {
-            DrawText("Owned", (int)previewPanel.x + 10, (int)previewPanel.y + 90, 18, DARKGRAY);
+            DrawText("Owned", (int)previewPanel.x + 10, (int)previewPanel.y + 250, 18, DARKGRAY);
             
         } else {
-            DrawText("Available", (int)previewPanel.x + 10, (int)previewPanel.y + 90, 18, BLACK);
+            DrawText("Available", (int)previewPanel.x + 10, (int)previewPanel.y + 250, 18, BLACK);
             DrawRectangleLines((int)buyButton.x, (int)buyButton.y, (int)buyButton.width, (int)buyButton.height, BLUE);
             DrawText(TextFormat("Buy: %d coins", allItems[selectedItemIndex].price), buyButton.x + 10, buyButton.y + 10, 16, BLACK);
         }
+
+        Texture2D itemTex = LoadTexture(TextFormat("../assets/%s.png", allItems[selectedItemIndex].name.c_str()));
+        DrawTextureEx(itemTex, {previewPanel.x - 20, previewPanel.y - 50}, 0.0f, 5.0f, WHITE);
     }
 
     if(popupMessageTimer > 0){
