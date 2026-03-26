@@ -18,6 +18,8 @@ struct Assets {
     Texture2D panelTex;
     Texture2D filterButton;
     Texture2D PressedFilterButton;
+    Texture2D AddButton;
+    Texture2D CheckButton;
 
     std::unordered_map<std::string, Texture2D> loadedTextures;
 

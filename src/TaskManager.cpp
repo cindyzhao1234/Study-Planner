@@ -11,7 +11,7 @@ namespace {
     constexpr float INPUT_BOX_HEIGHT = 60.0f;
     constexpr float ADD_BUTTON_SIZE = 20.0f;
     constexpr float SCROLL_SPEED = 20.0f;
-    constexpr float TEXT_LEFT_OFFSET = 30.0f;
+    constexpr float TEXT_LEFT_OFFSET = 40.0f;
     constexpr float INNER_TOP_PADDING = 10.0f;
     constexpr float DELETE_BUTTON_EXTRA_OFFSET = 40.0f;
     constexpr float SCREEN_HEIGHT = 1024.0f;
@@ -30,7 +30,7 @@ float TaskManager::GetTaskHeight(const Task& task){
 }
 
 Rectangle TaskManager::GetTaskCheckboxRect(float currentY){
-    return Rectangle{taskAreaX, currentY + INNER_TOP_PADDING, checkboxWidth, checkboxHeight};
+    return Rectangle{taskAreaX + 10, currentY + INNER_TOP_PADDING, checkboxWidth, checkboxHeight};
 }
 
 Rectangle TaskManager::GetTaskDeleteRect(float currentY, int maxWidth){
@@ -99,8 +99,12 @@ void TaskManager::DrawTaskPanel(Assets assets){
 
     float panelRight = (float)panelX + (float)panelWidth;
     addButton = {panelRight - 50, panelY + 20, ADD_BUTTON_SIZE, ADD_BUTTON_SIZE};
-    DrawRectangleLines((int)addButton.x, (int)addButton.y, (int)addButton.width, (int)addButton.height, RED);
-    DrawText("+", (int)addButton.x + 5, (int)addButton.y, HEADER_FONT_SIZE, BLACK);
+    DrawTexture(
+        assets.AddButton,
+        addButton.x,
+        addButton.y,
+        WHITE
+    );
 
     if(isTypingTask){
         float inputAreaX = panelX + padding;
@@ -167,7 +171,15 @@ void TaskManager::DrawTasks(Assets assets){
         // DrawRectangleLines((int)taskAreaX, (int)currentY, (int)taskAreaWidth, (int)taskHeight, GREEN);
 
         Rectangle checkbox = GetTaskCheckboxRect(currentY);
-        DrawRectangleLines((int)checkbox.x, (int)checkbox.y, (int)checkbox.width, (int)checkbox.height, PURPLE);
+
+        DrawTexturePro(
+            assets.CheckButton,
+            {0, 0, (float)assets.CheckButton.width, (float)assets.CheckButton.height},
+            checkbox,
+            {0, 0},
+            0.0f,
+            WHITE
+        );
 
         taskList[i].deleteTask = GetTaskDeleteRect(currentY, maxWidth);
         DrawTexture(assets.binTexture, (int)taskList[i].deleteTask.x, (int)taskList[i].deleteTask.y, WHITE);

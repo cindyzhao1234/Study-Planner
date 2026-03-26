@@ -16,6 +16,8 @@ void Assets::Load(std::vector<Accessories>& ItemList) {
     panelTex = LoadTexture("../assets/Panel.png");
     filterButton = LoadTexture("../assets/filterButton.png");
     PressedFilterButton = LoadTexture("../assets/PressedFilterButton.png");
+    AddButton = LoadTexture("../assets/AddButton.png");
+    CheckButton = LoadTexture("../assets/CheckButton.png");
 
     for(int i = 0; i < ItemList.size(); i++){
         std::string itemName = ItemList[i].name;
@@ -42,6 +44,8 @@ void Assets::Unload() {
     UnloadTexture(panelTex);
     UnloadTexture(filterButton);
     UnloadTexture(PressedFilterButton);
+    UnloadTexture(AddButton);
+    UnloadTexture(CheckButton);
 
     for(auto& entry : loadedTextures){
         UnloadTexture(entry.second);
